@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <div>
+                <p class="eyebrow">FastAPI project</p>
+                <h1>Task Manager</h1>
+                <p class="subtitle">
+                    Личный список задач с регистрацией, авторизацией и JWT-защитой.
+                </p>
+            </div>
+
+            <div class="status-card">
+                <span class="status-dot"></span>
+                <span id="user-status">Гость</span>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="card auth-card" id="auth-section">
+                <div class="tabs">
+                    <button class="tab active" id="login-tab">Вход</button>
+                    <button class="tab" id="register-tab">Регистрация</button>
+                </div>
+
+                <form id="auth-form" class="form">
+                    <label>
+                        Логин
+                        <input
+                            type="text"
+                            id="username"
+                            placeholder="Например, ksenia"
+                            autocomplete="username"
+                            required
+                        >
+                    </label>
+
+                    <label>
+                        Пароль
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Минимум 6 символов"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </label>
+
+                    <button type="submit" class="primary-btn" id="auth-submit">
+                        Войти
+                    </button>
+                </form>
+
+                <p class="hint" id="auth-hint">
+                    Нет аккаунта? Перейди во вкладку «Регистрация».
+                </p>
+
+                <div class="message" id="auth-message"></div>
+            </section>
+
+            <section class="card tasks-card hidden" id="tasks-section">
+                <div class="tasks-header">
+                    <div>
+                        <p class="eyebrow">My tasks</p>
+                        <h2>Мои задачи</h2>
+                    </div>
+
+                    <button class="secondary-btn" id="logout-btn">
+                        Выйти
+                    </button>
+                </div>
+
+                <form id="task-form" class="task-form">
+                    <input
+                        type="text"
+                        id="task-title"
+                        placeholder="Название задачи"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="task-description"
+                        placeholder="Описание, необязательно"
+                    >
+
+                    <button type="submit" class="primary-btn">
+                        Добавить
+                    </button>
+                </form>
+
+                <div class="message" id="task-message"></div>
+
+                <div class="task-stats">
+                    <span id="total-count">Всего: 0</span>
+                    <span id="done-count">Выполнено: 0</span>
+                </div>
+
+                <div id="tasks-list" class="tasks-list"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,7 +1,13 @@
 from datetime import timedelta
 
 from fastapi import FastAPI, Depends, HTTPException, status
+from datetime import timedelta
+
+from fastapi import FastAPI, Depends, HTTPException, status, Request
+from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app import crud
@@ -29,11 +35,16 @@ app = FastAPI(
     version="2.0.0"
 )
 
-@app.get("/")
-def root():
-    return {
-        "message": "Task Manager API is running"
-    }
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/", response_class=HTMLResponse)
+def root(request: Request):
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request}
+    )
 
 @app.post(
     "/register",
