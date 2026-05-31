@@ -149,7 +149,7 @@ async function createTask(title, description) {
     return data;
 }
 
-async function updateTask(task) {
+async function updateTaskStatus(task) {
     const response = await fetch(`${API_URL}/tasks/${task.id}`, {
         method: "PATCH",
         headers: {
@@ -158,6 +158,29 @@ async function updateTask(task) {
         },
         body: JSON.stringify({
             is_completed: !task.is_completed
+        })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.detail || "Не удалось обновить статус задачи");
+    }
+
+    return data;
+}
+
+
+async function updateTaskText(taskId, title, description) {
+    const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            title,
+            description
         })
     });
 
@@ -218,25 +241,103 @@ function renderTasks(tasks) {
                 ${task.is_completed ? "checked" : ""}
             >
 
-            <div>
-                <p class="task-title"></p>
-                <p class="task-description"></p>
+            <div class="task-content">
+                <div class="task-view">
+                    <p class="task-title"></p>
+                    <p class="task-description"></p>
+                </div>
+
+                <form class="edit-form hidden">
+                    <input
+                        type="text"
+                        class="edit-title"
+                        placeholder="Название задачи"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        class="edit-description"
+                        placeholder="Описание задачи"
+                    >
+
+                    <div class="edit-actions">
+                        <button type="submit" class="small-btn">
+                            Сохранить
+                        </button>
+
+                        <button type="button" class="secondary-small-btn cancel-edit-btn">
+                            Отмена
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="task-actions">
-                <button class="danger-btn">Удалить</button>
+                <button class="small-btn edit-btn">Изменить</button>
+                <button class="danger-btn delete-btn">Удалить</button>
             </div>
         `;
 
-        item.querySelector(".task-title").textContent = task.title;
-        item.querySelector(".task-description").textContent = task.description || "Без описания";
+        const titleElement = item.querySelector(".task-title");
+        const descriptionElement = item.querySelector(".task-description");
+
+        const taskView = item.querySelector(".task-view");
+        const editForm = item.querySelector(".edit-form");
+        const editTitle = item.querySelector(".edit-title");
+        const editDescription = item.querySelector(".edit-description");
 
         const checkbox = item.querySelector(".task-checkbox");
-        const deleteButton = item.querySelector(".danger-btn");
+        const editButton = item.querySelector(".edit-btn");
+        const cancelEditButton = item.querySelector(".cancel-edit-btn");
+        const deleteButton = item.querySelector(".delete-btn");
+
+        titleElement.textContent = task.title;
+        descriptionElement.textContent = task.description || "Без описания";
+
+        editTitle.value = task.title;
+        editDescription.value = task.description || "";
 
         checkbox.addEventListener("change", async () => {
             try {
-                await updateTask(task);
+                await updateTaskStatus(task);
+                await loadTasks();
+            } catch (error) {
+                setMessage(taskMessage, error.message, "error");
+            }
+        });
+
+        editButton.addEventListener("click", () => {
+            taskView.classList.add("hidden");
+            editForm.classList.remove("hidden");
+            editButton.classList.add("hidden");
+            checkbox.disabled = true;
+        });
+
+        cancelEditButton.addEventListener("click", () => {
+            editTitle.value = task.title;
+            editDescription.value = task.description || "";
+
+            taskView.classList.remove("hidden");
+            editForm.classList.add("hidden");
+            editButton.classList.remove("hidden");
+            checkbox.disabled = false;
+        });
+
+        editForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const newTitle = editTitle.value.trim();
+            const newDescription = editDescription.value.trim();
+
+            if (!newTitle) {
+                setMessage(taskMessage, "Название задачи не может быть пустым", "error");
+                return;
+            }
+
+            try {
+                await updateTaskText(task.id, newTitle, newDescription || null);
+                setMessage(taskMessage, "Задача обновлена", "success");
                 await loadTasks();
             } catch (error) {
                 setMessage(taskMessage, error.message, "error");

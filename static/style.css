@@ -23,7 +23,7 @@ button {
 }
 
 .page {
-    width: min(1120px, 92%);
+    width: min(1400px, 94%);
     margin: 0 auto;
     padding: 48px 0;
 }
@@ -90,7 +90,7 @@ h2 {
 
 .layout {
     display: grid;
-    grid-template-columns: 420px 1fr;
+    grid-template-columns: 420px minmax(700px, 1fr);
     gap: 24px;
     align-items: start;
 }
@@ -106,6 +106,10 @@ h2 {
 .auth-card,
 .tasks-card {
     padding: 28px;
+}
+
+.tasks-card {
+    min-width: 760px;
 }
 
 .tabs {
@@ -319,5 +323,52 @@ input:focus {
 
     .task-form {
         grid-template-columns: 1fr;
+    }
+}
+
+.task-content {
+    min-width: 0;
+}
+
+.edit-form {
+    display: grid;
+    gap: 10px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.secondary-small-btn {
+    border: 0;
+    border-radius: 16px;
+    padding: 9px 12px;
+    color: #e5e7eb;
+    background: rgba(30, 41, 59, 0.95);
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    transition: 0.2s;
+}
+
+.secondary-small-btn:hover,
+.small-btn:hover,
+.danger-btn:hover {
+    transform: translateY(-1px);
+}
+
+.task-checkbox:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+    .task-item {
+        grid-template-columns: auto 1fr;
+    }
+
+    .task-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
     }
 }
