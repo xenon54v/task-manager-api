@@ -89,7 +89,7 @@ task-manager-api/
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/USERNAME/task-manager-api.git
+git clone https://github.com/xenon54v/task-manager-api
 ```
 
 ### 2. Перейти в папку проекта
