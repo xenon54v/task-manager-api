@@ -122,8 +122,8 @@ def test_create_task_success():
     response = client.post(
         "/tasks",
         json={
-            "title": "Изучить FastAPI",
-            "description": "Сделать проект для портфолио",
+            "title": "learn how to fly",
+            "description": "book on the floor",
             "is_completed": False
         },
         headers=headers
@@ -133,8 +133,8 @@ def test_create_task_success():
 
     data = response.json()
 
-    assert data["title"] == "Изучить FastAPI"
-    assert data["description"] == "Сделать проект для портфолио"
+    assert data["title"] == "cooked diner"
+    assert data["description"] == "rice and vegetables"
     assert data["is_completed"] is False
     assert "id" in data
     assert "owner_id" in data
@@ -145,8 +145,8 @@ def test_get_tasks_success():
     client.post(
         "/tasks",
         json={
-            "title": "Первая задача",
-            "description": "Описание первой задачи",
+            "title": "first task",
+            "description": "Description of first task",
             "is_completed": False
         },
         headers=headers
@@ -155,8 +155,8 @@ def test_get_tasks_success():
     client.post(
         "/tasks",
         json={
-            "title": "Вторая задача",
-            "description": "Описание второй задачи",
+            "title": "second task",
+            "description": "Description of second task",
             "is_completed": True
         },
         headers=headers
@@ -169,8 +169,8 @@ def test_get_tasks_success():
     data = response.json()
 
     assert len(data) == 2
-    assert data[0]["title"] == "Первая задача"
-    assert data[1]["title"] == "Вторая задача"
+    assert data[0]["title"] == "first task"
+    assert data[1]["title"] == "second task"
 
 def test_update_task_success():
     headers = get_auth_headers()
@@ -178,8 +178,8 @@ def test_update_task_success():
     create_response = client.post(
         "/tasks",
         json={
-            "title": "Старая задача",
-            "description": "Старое описание",
+            "title": "old task",
+            "description": "old description",
             "is_completed": False
         },
         headers=headers
@@ -190,8 +190,8 @@ def test_update_task_success():
     update_response = client.patch(
         f"/tasks/{task_id}",
         json={
-            "title": "Новая задача",
-            "description": "Новое описание",
+            "title": "new task",
+            "description": "new description",
             "is_completed": True
         },
         headers=headers
@@ -201,8 +201,8 @@ def test_update_task_success():
 
     data = update_response.json()
 
-    assert data["title"] == "Новая задача"
-    assert data["description"] == "Новое описание"
+    assert data["title"] == "new task"
+    assert data["description"] == "new description"
     assert data["is_completed"] is True
 
 def test_delete_task_success():
@@ -211,8 +211,8 @@ def test_delete_task_success():
     create_response = client.post(
         "/tasks",
         json={
-            "title": "Удалить задачу",
-            "description": "Эта задача будет удалена",
+            "title": "delete task",
+            "description": "this task will be deleted",
             "is_completed": False
         },
         headers=headers
@@ -243,8 +243,8 @@ def test_user_cannot_access_another_user_task():
     create_response = client.post(
         "/tasks",
         json={
-            "title": "Личная задача",
-            "description": "Задача первого пользователя",
+            "title": "excess task",
+            "description": "first users task",
             "is_completed": False
         },
         headers=first_user_headers
