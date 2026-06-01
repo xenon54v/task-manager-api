@@ -31,7 +31,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Task Manager API",
-    description="API для управления задачами с регистрацией и JWT-авторизацией",
+    description="Task management API with user registration and JWT authentication",
     version="2.0.0"
 )
 

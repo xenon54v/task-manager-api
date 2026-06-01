@@ -40,13 +40,13 @@ function switchMode(newMode) {
     if (mode === "login") {
         loginTab.classList.add("active");
         registerTab.classList.remove("active");
-        authSubmit.textContent = "Войти";
-        authHint.textContent = "Нет аккаунта? Перейди во вкладку «Регистрация».";
+        authSubmit.textContent = "Login";
+        authHint.textContent = "Don't have an account? Switch to the Register tab.";
     } else {
         registerTab.classList.add("active");
         loginTab.classList.remove("active");
-        authSubmit.textContent = "Зарегистрироваться";
-        authHint.textContent = "Уже есть аккаунт? Перейди во вкладку «Вход».";
+        authSubmit.textContent = "Register";
+        authHint.textContent = "Already have an account? Switch to the Login tab.";
     }
 
     setMessage(authMessage, "");
@@ -56,12 +56,12 @@ function showApp() {
     if (token) {
         authSection.classList.add("hidden");
         tasksSection.classList.remove("hidden");
-        userStatus.textContent = currentUsername ? `Пользователь: ${currentUsername}` : "Авторизован";
+        userStatus.textContent = currentUsername ? `User: ${currentUsername}` : "Authenticated";
         loadTasks();
     } else {
         authSection.classList.remove("hidden");
         tasksSection.classList.add("hidden");
-        userStatus.textContent = "Гость";
+        userStatus.textContent = "Guest";
     }
 }
 
@@ -80,7 +80,7 @@ async function register(username, password) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Ошибка регистрации");
+        throw new Error(data.detail || "Registration failed");
     }
 
     return data;
@@ -103,7 +103,7 @@ async function login(username, password) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Ошибка входа");
+        throw new Error(data.detail || "Login failed");
     }
 
     return data;
@@ -143,7 +143,7 @@ async function createTask(title, description) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Не удалось создать задачу");
+        throw new Error(data.detail || "Failed to create task");
     }
 
     return data;
@@ -164,12 +164,11 @@ async function updateTaskStatus(task) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Не удалось обновить статус задачи");
+        throw new Error(data.detail || "Failed to update task status");
     }
 
     return data;
 }
-
 
 async function updateTaskText(taskId, title, description) {
     const response = await fetch(`${API_URL}/tasks/${taskId}`, {
@@ -187,7 +186,7 @@ async function updateTaskText(taskId, title, description) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Не удалось обновить задачу");
+        throw new Error(data.detail || "Failed to update task");
     }
 
     return data;
@@ -204,7 +203,7 @@ async function deleteTask(taskId) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error(data.detail || "Не удалось удалить задачу");
+        throw new Error(data.detail || "Failed to delete task");
     }
 
     return data;
@@ -213,15 +212,15 @@ async function deleteTask(taskId) {
 function renderTasks(tasks) {
     tasksList.innerHTML = "";
 
-    totalCount.textContent = `Всего: ${tasks.length}`;
+    totalCount.textContent = `Total: ${tasks.length}`;
 
     const completedCount = tasks.filter(task => task.is_completed).length;
-    doneCount.textContent = `Выполнено: ${completedCount}`;
+    doneCount.textContent = `Completed: ${completedCount}`;
 
     if (tasks.length === 0) {
         tasksList.innerHTML = `
             <div class="empty-state">
-                Задач пока нет. Добавь первую задачу выше.
+                There are no tasks yet. Add your first task above.
             </div>
         `;
         return;
@@ -251,31 +250,31 @@ function renderTasks(tasks) {
                     <input
                         type="text"
                         class="edit-title"
-                        placeholder="Название задачи"
+                        placeholder="Task title"
                         required
                     >
 
                     <input
                         type="text"
                         class="edit-description"
-                        placeholder="Описание задачи"
+                        placeholder="Task description"
                     >
 
                     <div class="edit-actions">
                         <button type="submit" class="small-btn">
-                            Сохранить
+                            Save
                         </button>
 
                         <button type="button" class="secondary-small-btn cancel-edit-btn">
-                            Отмена
+                            Cancel
                         </button>
                     </div>
                 </form>
             </div>
 
             <div class="task-actions">
-                <button class="small-btn edit-btn">Изменить</button>
-                <button class="danger-btn delete-btn">Удалить</button>
+                <button class="small-btn edit-btn">Edit</button>
+                <button class="danger-btn delete-btn">Delete</button>
             </div>
         `;
 
@@ -293,7 +292,7 @@ function renderTasks(tasks) {
         const deleteButton = item.querySelector(".delete-btn");
 
         titleElement.textContent = task.title;
-        descriptionElement.textContent = task.description || "Без описания";
+        descriptionElement.textContent = task.description || "No description";
 
         editTitle.value = task.title;
         editDescription.value = task.description || "";
@@ -310,8 +309,13 @@ function renderTasks(tasks) {
         editButton.addEventListener("click", () => {
             taskView.classList.add("hidden");
             editForm.classList.remove("hidden");
+
             editButton.classList.add("hidden");
+            deleteButton.classList.add("hidden");
+
             checkbox.disabled = true;
+
+            editTitle.focus();
         });
 
         cancelEditButton.addEventListener("click", () => {
@@ -320,7 +324,10 @@ function renderTasks(tasks) {
 
             taskView.classList.remove("hidden");
             editForm.classList.add("hidden");
+
             editButton.classList.remove("hidden");
+            deleteButton.classList.remove("hidden");
+
             checkbox.disabled = false;
         });
 
@@ -331,13 +338,13 @@ function renderTasks(tasks) {
             const newDescription = editDescription.value.trim();
 
             if (!newTitle) {
-                setMessage(taskMessage, "Название задачи не может быть пустым", "error");
+                setMessage(taskMessage, "Task title cannot be empty", "error");
                 return;
             }
 
             try {
                 await updateTaskText(task.id, newTitle, newDescription || null);
-                setMessage(taskMessage, "Задача обновлена", "success");
+                setMessage(taskMessage, "Task updated successfully", "success");
                 await loadTasks();
             } catch (error) {
                 setMessage(taskMessage, error.message, "error");
@@ -345,9 +352,15 @@ function renderTasks(tasks) {
         });
 
         deleteButton.addEventListener("click", async () => {
+            const confirmed = confirm("Are you sure you want to delete this task?");
+
+            if (!confirmed) {
+                return;
+            }
+
             try {
                 await deleteTask(task.id);
-                setMessage(taskMessage, "Задача удалена", "success");
+                setMessage(taskMessage, "Task deleted successfully", "success");
                 await loadTasks();
             } catch (error) {
                 setMessage(taskMessage, error.message, "error");
@@ -378,14 +391,14 @@ authForm.addEventListener("submit", async (event) => {
     const password = document.getElementById("password").value.trim();
 
     if (!username || !password) {
-        setMessage(authMessage, "Заполни логин и пароль", "error");
+        setMessage(authMessage, "Please enter username and password", "error");
         return;
     }
 
     try {
         if (mode === "register") {
             await register(username, password);
-            setMessage(authMessage, "Регистрация успешна. Теперь можно войти.", "success");
+            setMessage(authMessage, "Registration completed. You can now log in.", "success");
             switchMode("login");
             return;
         }
@@ -412,7 +425,7 @@ taskForm.addEventListener("submit", async (event) => {
     const description = taskDescription.value.trim();
 
     if (!title) {
-        setMessage(taskMessage, "Введите название задачи", "error");
+        setMessage(taskMessage, "Please enter a task title", "error");
         return;
     }
 
@@ -422,7 +435,7 @@ taskForm.addEventListener("submit", async (event) => {
         taskTitle.value = "";
         taskDescription.value = "";
 
-        setMessage(taskMessage, "Задача добавлена", "success");
+        setMessage(taskMessage, "Task added successfully", "success");
 
         await loadTasks();
     } catch (error) {

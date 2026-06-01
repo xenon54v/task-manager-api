@@ -1,31 +1,31 @@
 # Task Manager
 
-**Task Manager** — это веб-приложение для управления личными задачами с регистрацией, авторизацией и JWT-защитой.
+**Task Manager** is an educational portfolio web application for managing personal tasks.
 
-Проект реализован на **FastAPI** и показывает базовые навыки backend-разработки: работа с REST API, базой данных, пользователями, авторизацией, хешированием паролей и защищёнными маршрутами.
-
----
-
-## Возможности проекта
-
-- регистрация нового пользователя;
-- вход пользователя в систему;
-- JWT-авторизация;
-- хеширование паролей;
-- хранение секретного ключа в `.env`;
-- создание личных задач;
-- просмотр списка своих задач;
-- редактирование названия и описания задачи;
-- отметка задачи как выполненной;
-- удаление задачи;
-- защита задач от доступа других пользователей;
-- веб-интерфейс на HTML/CSS/JavaScript;
-- Swagger-документация API;
-- автоматические тесты на `pytest`.
+The project is built with **FastAPI** and demonstrates core backend development skills: REST API design, database integration, user authentication, JWT-protected routes, environment-based configuration, and automated API testing.
 
 ---
 
-## Стек технологий
+## Features
+
+- User registration
+- User login
+- JWT authentication
+- Password hashing
+- Secret key storage in `.env`
+- Create personal tasks
+- View personal task list
+- Edit task title and description
+- Mark tasks as completed
+- Delete tasks
+- Prevent users from accessing other users' tasks
+- Web interface built with HTML, CSS, and JavaScript
+- Swagger API documentation
+- Automated tests with `pytest`
+
+---
+
+## Tech Stack
 
 - **Python**
 - **FastAPI**
@@ -45,23 +45,21 @@
 
 ---
 
-## Скриншоты
+## Screenshots
 
-### Главная страница
+### Login page
 
-![Главная страница](screenshots/register-page.png)
+![Login page](screenshots/register-page.png)
 
-### Список задач
+### Task list
 
-![Список задач](screenshots/tasks-page.png)
+![Task list](screenshots/tasks-page.png)
 
-### Swagger-документация
+### Swagger-documentation
 
-![Swagger-документация](screenshots/swagger-docs.png)
+![Swagger-documentation](screenshots/swagger-docs.png)
 
----
-
-## Структура проекта
+## Project Structure
 
 ```text
 task-manager-api/
@@ -100,72 +98,78 @@ task-manager-api/
 
 ---
 
-## Установка и запуск
+## Installation and Setup
 
-### 1. Клонировать репозиторий
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/xenon54v/task-manager-api.git
 ```
 
-### 2. Перейти в папку проекта
+### 2. Open the project folder
 
 ```bash
 cd task-manager-api
 ```
 
-### 3. Создать виртуальное окружение
+### 3. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-### 4. Активировать виртуальное окружение
+### 4. Activate the virtual environment
 
-Для Windows PowerShell:
+For Windows PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-Для Windows CMD:
+For Windows CMD:
 
 ```cmd
 .venv\Scripts\activate
 ```
 
-### 5. Установить зависимости
+For macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 5. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 6. Создать файл `.env`
+### 6. Create a `.env` file
 
-В корне проекта нужно создать файл `.env` на основе `.env.example`.
+Create a `.env` file in the project root using `.env.example` as a template.
 
-Пример `.env`:
+Example `.env`:
 
 ```env
 SECRET_KEY=super-secret-development-key-change-me
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-Файл `.env` не загружается в GitHub, потому что может содержать секретные данные.
+The `.env` file is not committed to GitHub because it may contain sensitive data.
 
-### 7. Запустить сервер
+### 7. Run the application
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-После запуска приложение будет доступно по адресу:
+The application will be available at:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Swagger-документация API:
+Swagger API documentation:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -173,78 +177,78 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Основные API-эндпоинты
+## API Endpoints
 
-| Метод | URL | Описание |
+| Method | URL | Description |
 |---|---|---|
-| `POST` | `/register` | Регистрация пользователя |
-| `POST` | `/login` | Вход пользователя и получение JWT-токена |
-| `GET` | `/users/me` | Получение данных текущего пользователя |
-| `GET` | `/tasks` | Получение списка задач пользователя |
-| `POST` | `/tasks` | Создание новой задачи |
-| `GET` | `/tasks/{task_id}` | Получение одной задачи |
-| `PATCH` | `/tasks/{task_id}` | Обновление задачи |
-| `DELETE` | `/tasks/{task_id}` | Удаление задачи |
+| `POST` | `/register` | Register a new user |
+| `POST` | `/login` | Log in and receive a JWT access token |
+| `GET` | `/users/me` | Get current user data |
+| `GET` | `/tasks` | Get the current user's task list |
+| `POST` | `/tasks` | Create a new task |
+| `GET` | `/tasks/{task_id}` | Get a single task |
+| `PATCH` | `/tasks/{task_id}` | Update a task |
+| `DELETE` | `/tasks/{task_id}` | Delete a task |
 
 ---
 
-## Авторизация
+## Authentication
 
-В проекте используется JWT-авторизация.
+The project uses JWT authentication.
 
-После входа пользователь получает access token.  
-Этот токен используется для доступа к защищённым маршрутам:
+After login, the user receives an access token.  
+This token is used to access protected routes:
 
 ```text
 Authorization: Bearer <access_token>
 ```
 
-Каждый пользователь видит, изменяет и удаляет только свои задачи.
+Each user can view, edit, and delete only their own tasks.
 
 ---
 
-## Пример задачи
+## Example Task
 
 ```json
 {
-  "title": "Изучить FastAPI",
-  "description": "Сделать backend-проект для портфолио",
+  "title": "Learn FastAPI",
+  "description": "Build a backend project for my portfolio",
   "is_completed": false
 }
 ```
 
 ---
 
-## Тестирование
+## Testing
 
-В проекте используются автоматические тесты на `pytest`.
+The project includes automated API tests with `pytest`.
 
-Запуск тестов:
+Run tests:
 
 ```bash
 pytest
 ```
 
-или:
+or:
 
 ```bash
 python -m pytest
 ```
 
-Проверяются:
+The tests cover:
 
-- регистрация пользователя;
-- запрет повторной регистрации;
-- вход пользователя;
-- запрет входа с неверным паролем;
-- запрет доступа к задачам без токена;
-- создание задачи;
-- получение списка задач;
-- обновление задачи;
-- удаление задачи;
-- запрет доступа к задачам другого пользователя.
+- User registration
+- Duplicate username validation
+- User login
+- Login with an incorrect password
+- Protected task access without a token
+- Task creation
+- Task list retrieval
+- Task update
+- Task deletion
+- Protection from accessing another user's tasks
 
-Текущий результат тестирования:
+Current test result:
 
 ```text
 10 passed
@@ -252,60 +256,59 @@ python -m pytest
 
 ---
 
-## Что реализовано в проекте
+## Implemented Functionality
 
-В рамках проекта реализованы:
+The project includes:
 
-- модель пользователя;
-- модель задачи;
-- связь пользователя с его задачами;
-- регистрация пользователя;
-- проверка уникальности username;
-- безопасное хеширование паролей;
-- вход пользователя по username и password;
-- генерация JWT-токена;
-- проверка текущего пользователя по токену;
-- хранение настроек через переменные окружения;
-- CRUD-операции для задач;
-- редактирование задач через интерфейс;
-- запрет доступа к чужим задачам;
-- веб-интерфейс на HTML/CSS/JavaScript;
-- подключение статических файлов и HTML-шаблонов;
-- Swagger-документация;
-- автоматические API-тесты.
-
----
-
-## Безопасность
-
-В проекте реализованы базовые меры безопасности:
-
-- пароли не хранятся в открытом виде;
-- для паролей используется хеширование;
-- доступ к задачам защищён JWT-токеном;
-- пользователь может работать только со своими задачами;
-- секретный ключ вынесен в `.env`;
-- файл `.env` добавлен в `.gitignore`;
-- в репозитории хранится только `.env.example`.
+- User model
+- Task model
+- Relationship between users and tasks
+- User registration
+- Unique username validation
+- Secure password hashing
+- Login with username and password
+- JWT access token generation
+- Current user validation by token
+- Environment-based configuration
+- CRUD operations for tasks
+- Task editing through the web interface
+- Protection from accessing other users' tasks
+- Web interface built with HTML, CSS, and JavaScript
+- Static files and HTML templates
+- Swagger documentation
+- Automated API tests
 
 ---
 
-## Статус проекта
+## Security
 
-Проект находится в разработке.
+Basic security measures implemented in the project:
 
-Планируется добавить:
-
-- Alembic-миграции;
-- Docker;
-- фильтрацию задач;
-- поиск по задачам;
-- подтверждение удаления задачи;
-- деплой проекта.
+- Passwords are not stored in plain text
+- Passwords are hashed
+- Task access is protected by JWT
+- Users can access only their own tasks
+- The secret key is stored in `.env`
+- `.env` is included in `.gitignore`
+- Only `.env.example` is committed to the repository
 
 ---
 
-## Автор
+## Project Status
+
+The project is under development.
+
+Planned improvements:
+
+- Alembic migrations
+- Docker support
+- Task filtering
+- Task search
+- Project deployment
+
+---
+
+## Author
 
 **Ksenia**
 
