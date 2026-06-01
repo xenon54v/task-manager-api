@@ -372,3 +372,11 @@ input:focus {
         justify-content: flex-start;
     }
 }
+
+.hidden {
+    display: none !important;
+}
+
+.edit-form.hidden {
+    display: none !important;
+}
