@@ -122,8 +122,8 @@ def test_create_task_success():
     response = client.post(
         "/tasks",
         json={
-            "title": "learn how to fly",
-            "description": "book on the floor",
+            "title": "cooked diner",
+            "description": "rice and vegetables",
             "is_completed": False
         },
         headers=headers
